@@ -17,11 +17,12 @@ services:
   zabbix-server:
     image: zabbix/zabbix-server-pgsql:ubuntu-latest
     restart: always
-    environment:   # The Postgres database value variable
+    environment:
       POSTGRES_USER: zabbix
       POSTGRES_PASSWORD: zabbix
       POSTGRES_DB: zabbixDB
-      ZBX_HISTORYSTORAGETYPES: log,text #Zabbix configuration variables
+      DB_SERVER_HOST: postgres-server
+      ZBX_HISTORYSTORAGETYPES: log,text
       ZBX_DEBUGLEVEL: 1
       ZBX_HOUSEKEEPINGFREQUENCY: 1
       ZBX_MAXHOUSEKEEPERDELETE: 5000
@@ -38,6 +39,7 @@ services:
       POSTGRES_USER: zabbix
       POSTGRES_PASSWORD: zabbix
       POSTGRES_DB: zabbixDB
+      DB_SERVER_HOST: postgres-server
       ZBX_SERVER_HOST: zabbix-server
       ZBX_POSTMAXSIZE: 64M
       PHP_TZ: "Europe/Moscow"
@@ -48,14 +50,14 @@ services:
     ports:
       - 8090:80
 
-# Zabbix agent service usage to zabbix server
-  zabbix-agent:
-    image: zabbix/zabbix-agent:latest
-    privileged: true
-    network_mode: "host"
-    restart: unless-stopped
-    environment:
-      - ZBX_SERVER_HOST=127.0.0.1
+## Zabbix agent service usage to zabbix server
+#  zabbix-agent:
+#    image: zabbix/zabbix-agent:latest
+#    privileged: true
+#    network_mode: "host"
+#    restart: unless-stopped
+#    environment:
+#      - ZBX_SERVER_HOST=127.0.0.1
 
 #Adminer http://0.0.0.0:8090/
   adminer:
@@ -67,7 +69,7 @@ services:
       - postgres-server
 
 #Grafana XXL http://0.0.0.0:3000/ по умолчанию - admin / admin
-  grafana-xxl:
-    image: monitoringartist/grafana-xxl:latest
-    ports:
-      - 3000:3000
+#  grafana-xxl:
+#    image: monitoringartist/grafana-xxl:latest
+#    ports:
+#      - 3000:3000
